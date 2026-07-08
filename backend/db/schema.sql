@@ -4,7 +4,8 @@ CREATE TABLE "student" (
   "email" varchar UNIQUE,
   "password" varchar,
   "department" varchar,
-  "year" int
+  "year" int,
+  "mentor_name" varchar
 );
 
 CREATE TABLE "skill_assessment" (

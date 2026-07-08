@@ -11,6 +11,7 @@
 | password | VARCHAR | Hashed password |
 | department | VARCHAR | Student's department |
 | year | INT | Academic year |
+| mentor_name | VARCHAR | Name of the student's assigned mentor |
 
 ### skill_assessment
 | Column | Type | Description |
