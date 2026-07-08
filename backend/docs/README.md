@@ -34,3 +34,44 @@
 
 ## ER Diagram
 See `er_diagram.png` in this folder.
+
+## API Endpoints
+
+### POST /auth/register
+Registers a new student.
+**Request body:**
+```json
+{
+  "name": "string",
+  "email": "string",
+  "password": "string",
+  "department": "string",
+  "year": 0,
+  "mentor_name": "string"
+}
+```
+**Response:** Returns a JWT access token.
+
+### POST /auth/login
+Logs in an existing student.
+**Request body:**
+```json
+{
+  "email": "string",
+  "password": "string"
+}
+```
+**Response:** Returns a JWT access token.
+
+### POST /students/assessment
+Submits a skill assessment for a student.
+**Request body:**
+```json
+{
+  "student_id": 0,
+  "skills": ["string"],
+  "experience_level": "string",
+  "score": 0
+}
+```
+**Response:** Confirms submission with an assessment_id.
