@@ -19,8 +19,3 @@ class TokenResponse(BaseModel):
     token_type: str = "bearer"
 
 # ---------- Skill Assessment Schemas ----------
-class SkillAssessmentCreate(BaseModel):
-    student_id: int
-    skills: List[str]
-    experience_level: str
-    score: int

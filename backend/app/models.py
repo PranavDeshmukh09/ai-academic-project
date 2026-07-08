@@ -14,14 +14,6 @@ class Student(Base):
     mentor_name = Column(String)
 
 
-class SkillAssessment(Base):
-    __tablename__ = "skill_assessment"
-
-    assessment_id = Column(Integer, primary_key=True, index=True)
-    student_id = Column(Integer, ForeignKey("student.student_id"))
-    skills = Column(JSON)
-    experience_level = Column(String)
-    score = Column(Integer)
 
 
 class ProjectIdea(Base):
