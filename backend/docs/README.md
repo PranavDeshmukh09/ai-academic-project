@@ -32,7 +32,6 @@
 | domain | VARCHAR | Project domain/category |
 | status | VARCHAR | e.g. 'Pending Evaluation' |
 
-## ER Diagram
 See `er_diagram.png` in this folder.
 
 ## API Endpoints
@@ -62,16 +61,3 @@ Logs in an existing student.
 }
 ```
 **Response:** Returns a JWT access token.
-
-### POST /students/assessment
-Submits a skill assessment for a student.
-**Request body:**
-```json
-{
-  "student_id": 0,
-  "skills": ["string"],
-  "experience_level": "string",
-  "score": 0
-}
-```
-**Response:** Confirms submission with an assessment_id.
