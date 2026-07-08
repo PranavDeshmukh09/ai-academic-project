@@ -12,7 +12,11 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 # ---------- JWT Token Settings ----------
-SECRET_KEY = "temporary-secret-key-change-this-later"  # we'll move this to a safer place later
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+SECRET_KEY = os.getenv("SECRET_KEY", "temporary-secret-key-change-this-later")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
