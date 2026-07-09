@@ -1,6 +1,12 @@
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from passlib.context import CryptContext
+import os
+from dotenv import load_dotenv
+from fastapi import Depends, HTTPException
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+
+load_dotenv()
 
 # ---------- Password Hashing ----------
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -12,10 +18,6 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 # ---------- JWT Token Settings ----------
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
 SECRET_KEY = os.getenv("SECRET_KEY", "temporary-secret-key-change-this-later")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
@@ -33,3 +35,16 @@ def decode_access_token(token: str):
         return payload
     except JWTError:
         return None
+
+# ---------- Get Current Student from Token ----------
+bearer_scheme = HTTPBearer()
+
+def get_current_student_id(credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme)) -> int:
+    token = credentials.credentials
+    payload = decode_access_token(token)
+    if payload is None:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+    student_id = payload.get("student_id")
+    if student_id is None:
+        raise HTTPException(status_code=401, detail="Invalid token payload")
+    return student_id

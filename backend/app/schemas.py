@@ -18,4 +18,8 @@ class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
 
-# ---------- Skill Assessment Schemas ----------
+# ---------- Project Idea Schemas ----------
+class ProjectIdeaCreate(BaseModel):
+    title: str
+    description: str
+    domain: str
