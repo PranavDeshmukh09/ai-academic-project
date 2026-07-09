@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 
+
 # ---------- Password Hashing ----------
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -33,3 +34,19 @@ def decode_access_token(token: str):
         return payload
     except JWTError:
         return None
+    
+    
+from fastapi import Depends, HTTPException
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+
+bearer_scheme = HTTPBearer()
+
+def get_current_student_id(credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme)) -> int:
+    token = credentials.credentials
+    payload = decode_access_token(token)
+    if payload is None:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+    student_id = payload.get("student_id")
+    if student_id is None:
+        raise HTTPException(status_code=401, detail="Invalid token payload")
+    return student_id
