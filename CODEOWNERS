@@ -1,0 +1,5 @@
+# This file designates which users must review and approve changes
+# The format is: [file/path pattern] @username
+
+# All files require review from PranavDeshmukh09
+* @PranavDeshmukh09
