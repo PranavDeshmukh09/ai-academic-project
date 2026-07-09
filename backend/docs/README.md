@@ -32,32 +32,48 @@
 | domain | VARCHAR | Project domain/category |
 | status | VARCHAR | e.g. 'Pending Evaluation' |
 
+## ER Diagram
 See `er_diagram.png` in this folder.
 
 ## API Endpoints
 
 ### POST /auth/register
 Registers a new student.
+
 **Request body:**
-```json
-{
-  "name": "string",
-  "email": "string",
-  "password": "string",
-  "department": "string",
-  "year": 0,
-  "mentor_name": "string"
-}
-```
+
+    {
+      "name": "string",
+      "email": "string",
+      "password": "string",
+      "department": "string",
+      "year": 0,
+      "mentor_name": "string"
+    }
+
 **Response:** Returns a JWT access token.
 
 ### POST /auth/login
 Logs in an existing student.
+
 **Request body:**
-```json
-{
-  "email": "string",
-  "password": "string"
-}
-```
+
+    {
+      "email": "string",
+      "password": "string"
+    }
+
 **Response:** Returns a JWT access token.
+
+### POST /projects/submit
+Submits a new project idea. Requires a valid JWT token (Authorization header).
+
+**Request body:**
+
+    {
+      "title": "string",
+      "description": "string",
+      "domain": "string"
+    }
+
+**Response:** Confirms submission with a project_id and status ("Pending Evaluation"). The student is automatically identified from the login token.
