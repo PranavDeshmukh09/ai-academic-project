@@ -135,7 +135,25 @@ def initialize_project(request: InitInput):
     if res.get("final_documentation"):
         ingest_text(res["final_documentation"], request.project_id)
         
-    return {"status": "success", "message": f"Project {request.project_id} initialized and indexed!"}
+    def _clean(val):
+        if isinstance(val, list):
+            return "\n".join(
+                v.get("text", str(v)) if isinstance(v, dict) else str(v)
+                for v in val
+            )
+        return str(val) if val else ""
+
+    return {
+        "status": "success",
+        "project_id": request.project_id,
+        "skill_report": _clean(res.get("skill_report", "")),
+        "project_evaluation": _clean(res.get("project_evaluation", "")),
+        "project_plan": _clean(res.get("project_plan", "")),
+        "tech_stack": _clean(res.get("tech_stack", "")),
+        "risk_analysis": _clean(res.get("risk_analysis", "")),
+        "mentor_advice": _clean(res.get("mentor_advice", "")),
+        "final_documentation": _clean(res.get("final_documentation", "")),
+    }
 
 @app.post("/chat")
 def chat(request: ChatInput):

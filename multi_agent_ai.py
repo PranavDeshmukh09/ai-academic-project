@@ -21,17 +21,24 @@ if not api_key:
 
 # Initialize the Google Gemini model
 llm = ChatGoogleGenerativeAI(
-    model="gemini-2.5-flash", 
+    model="gemini-flash-latest", 
     temperature=0.7,
     api_key=api_key
 )
 
-# Helper: retry on rate limit errors (Groq free tier has strict limits)
+# Helper: retry on rate limit errors with exponential backoff
 def safe_invoke(prompt, max_retries=5):
     for attempt in range(max_retries):
         try:
             response = llm.invoke([HumanMessage(content=prompt)])
-            return response.content
+            time.sleep(4)
+            content = response.content
+            if isinstance(content, list):
+                content = "\n".join(
+                    block.get("text", str(block)) if isinstance(block, dict) else str(block)
+                    for block in content
+                )
+            return content
         except Exception as e:
             if "429" in str(e) or "rate" in str(e).lower():
                 wait_time = 20 * (attempt + 1)

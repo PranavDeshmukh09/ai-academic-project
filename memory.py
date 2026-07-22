@@ -44,8 +44,8 @@ def load_memory(project_id: int):
 
     # 5. Format DB rows into text for the LLM
     profile_text = f"Name: {student_data.get('name', 'Unknown')}, Department: {student_data.get('department', 'Unknown')}, Year: {student_data.get('year', 'Unknown')}"
-    skills_list = skill_data.get('skills', [])
-    skills_text = f"Skills: {', '.join(skills_list)}. Experience Level: {skill_data.get('experience_level', 'Unknown')}."
+    skills_list = skill_data.get('skills', []) or []
+    skills_text = f"Skills: {', '.join(str(s) for s in skills_list)}. Experience Level: {skill_data.get('experience_level', 'Unknown')}."
     idea_text = f"Title: {idea_data.get('title', 'None')}. Description: {idea_data.get('description', 'None')}. Domain: {idea_data.get('domain', 'None')}"
 
     # 6. Return everything merged together
@@ -90,15 +90,21 @@ def save_memory(project_id: int, result: dict):
             "content": chat_reply
         }).execute()
 
+    def _clean(val):
+        """Ensure we always store a plain string, never a list/dict."""
+        if isinstance(val, list):
+            return "\n".join(str(v) for v in val)
+        return str(val) if val else ""
+
     record = {
         "project_id": project_id,
-        "skill_report": result.get("skill_report", ""),
-        "project_evaluation": result.get("project_evaluation", ""),
-        "project_plan": result.get("project_plan", ""),
-        "tech_stack": result.get("tech_stack", ""),
-        "risk_analysis": result.get("risk_analysis", ""),
-        "mentor_advice": result.get("mentor_advice", ""),
-        "final_documentation": result.get("final_documentation", "")
+        "skill_report": _clean(result.get("skill_report", "")),
+        "project_evaluation": _clean(result.get("project_evaluation", "")),
+        "project_plan": _clean(result.get("project_plan", "")),
+        "tech_stack": _clean(result.get("tech_stack", "")),
+        "risk_analysis": _clean(result.get("risk_analysis", "")),
+        "mentor_advice": _clean(result.get("mentor_advice", "")),
+        "final_documentation": _clean(result.get("final_documentation", ""))
     }
 
     existing = supabase.table("agent_output").select("output_id").eq("project_id", project_id).execute()

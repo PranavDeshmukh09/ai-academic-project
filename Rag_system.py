@@ -40,6 +40,9 @@ def ingest_document(file_path:str, project_id:int):
 
 def ingest_text(text:str, project_id:int):
     # "this function is responsible for spliting raw text embed it and then push it to pinecone under the project id for llm use"
+    if isinstance(text, list):
+        text = "\n".join([str(t) for t in text])
+        
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
     splits = text_splitter.split_text(text)
     if not splits:

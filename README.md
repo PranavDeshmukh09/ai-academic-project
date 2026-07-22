@@ -1,30 +1,31 @@
-# AI Academic Project (Milestone 1)
+# AI Academic Mentor (Full Pipeline)
 
-This project represents the completion of **Milestone 1**, providing a full-stack, production-ready Student Onboarding sequence. It features a bespoke, premium Split-Screen UI built with React and TailwindCSS, and a robust FastAPI backend connected directly to a Supabase PostgreSQL database.
+This project features a complete multi-agent LangGraph pipeline connected to a FastAPI backend, a vector database (Pinecone) for Retrieval-Augmented Generation (RAG), and a modern Streamlit Dashboard.
 
 ## System Architecture
-The application is entirely decoupled:
-- **Frontend**: A modern, high-fidelity React application running on Vite. It utilizes a custom "Premium Academic" design system, avoiding generic UI templates to provide an authentic, human-made feel.
-- **Backend**: A Python-based FastAPI gateway that receives onboarding payloads and safely commits them into the database using upsert operations.
-- **Database**: Supabase handles the persistent storage across three normalized tables (`student`, `skill_assessment`, and `project_idea`).
+- **Backend API**: FastAPI serving as the gateway for the AI pipeline and database operations.
+- **AI Orchestration**: LangGraph orchestrating 7 specialized AI agents powered by Google Gemini.
+- **Vector Database**: Pinecone for semantic document retrieval (RAG) using HuggingFace embeddings.
+- **Relational Database**: Supabase (PostgreSQL) for persistent storage of student profiles, project ideas, agent outputs, and chat histories.
+- **Frontend Dashboard**: Streamlit interface providing an interactive experience to initialize projects and chat with the AI Mentor.
 
 ## Prerequisites
-Before running this project, ensure you have the following installed on your machine:
-- [Node.js (v18+)](https://nodejs.org/)
+Before running this project, ensure you have the following installed:
 - [Python (3.10+)](https://www.python.org/)
-- A `.env` file in the root directory containing your Supabase credentials:
+- A `.env` file in the root directory containing the following credentials:
   ```env
   SUPABASE_URL="your-supabase-url"
   SUPABASE_KEY="your-supabase-anon-key"
+  GEMINI_API_KEY="your-google-gemini-api-key"
+  PINECONE_API_KEY="your-pinecone-api-key"
+  PINECONE_INDEX_NAME="your-pinecone-index-name"
   ```
 
 ---
 
 ## Getting Started: Step-by-Step Guide
 
-Follow these instructions strictly to create your isolated environment and run both the frontend and backend servers.
-
-### 1. Backend Setup (Terminal 1)
+### 1. Environment Setup
 Open a terminal in the root of the project to initialize the Python backend.
 
 **Create a Virtual Environment:**
@@ -47,37 +48,33 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-**Start the FastAPI Server:**
+---
+
+### 2. Run the Backend API (Terminal 1)
+Keep the virtual environment activated and start the FastAPI server:
+
 ```bash
 uvicorn api:app --reload
 ```
-*The backend is now live on `http://127.0.0.1:8000`.*
+*The backend API is now live on `http://127.0.0.1:8000`.*
 
 ---
 
-### 2. Frontend Setup (Terminal 2)
-Open a **second, separate terminal** in the root of the project to start the frontend interface.
+### 3. Run the Streamlit Dashboard (Terminal 2)
+Open a **second, separate terminal** in the root of the project.
+Activate the virtual environment again, then start the UI:
 
-**Navigate to the frontend folder:**
 ```bash
-cd frontend
+streamlit run streamlit_app.py
 ```
-
-**Install Frontend Dependencies:**
-```bash
-npm install
-```
-
-**Start the Vite Development Server:**
-```bash
-npm run dev
-```
-*The frontend is now live (typically on `http://localhost:5173`). Check your terminal output for the exact local link and click it to open the application in your browser.*
+*The Streamlit Dashboard is now live (typically on `http://localhost:8501`).*
 
 ---
 
-## Verification
-Once both servers are running:
-1. Fill out the "Student Initialization" form on the frontend.
-2. Click **Commit Official Record**.
-3. The system will push the data to Supabase, and exactly one second later, it will automatically query the database and render a beautiful, verified transcript widget to prove the round-trip pipeline is functioning perfectly.
+## Usage Instructions
+1. Open the Streamlit Dashboard in your browser.
+2. In the left sidebar, enter a **Project ID** that already exists in your Supabase `project_idea` table.
+3. (Optional) Upload reference documents (PDFs) to add context to the Pinecone RAG knowledge base.
+4. Click **Initialize Project**. The system will run the 7-agent LangGraph sequence, generating a comprehensive Project Evaluation, Tech Stack, Timeline, and README.
+5. Once completed, explore the generated artifacts across the different tabs.
+6. Use the chat interface at the bottom to have a contextual conversation with the unified AI Mentor!
