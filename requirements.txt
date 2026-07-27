@@ -1,5 +1,24 @@
+# API & Backend
 fastapi
 uvicorn
-supabase
-python-dotenv
+python-multipart
 pydantic
+python-dotenv
+
+# Database 
+supabase
+pinecone-client
+
+# AI & Orchestration
+langchain
+langgraph
+langchain-groq
+langchain-google-genai
+
+# RAG specific libraries
+langchain-huggingface
+pypdf
+sentence-transformers
+
+streamlit
+requests

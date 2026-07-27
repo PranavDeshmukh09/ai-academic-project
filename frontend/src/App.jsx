@@ -1,71 +1,168 @@
-import React, { useState } from 'react';
-import Onboarding from './pages/Onboarding';
+import React, { useState, useEffect } from 'react';
+import LandingPage from './pages/LandingPage';
+import AuthGateway from './pages/AuthGateway';
+import SkillAssessment from './pages/SkillAssessment';
+import ProjectSubmission from './pages/ProjectSubmission';
+import DashboardView from './pages/DashboardView';
+import ProfileView from './pages/ProfileView';
+import Sidebar from './components/Sidebar';
+import AIPipelineDemoView from './pages/AIPipelineDemoView';
+import { apiService } from './services/api';
 
 export default function App() {
-  const [theme, setTheme] = useState('dark');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentTab, setCurrentTab] = useState('dashboard');
+  
+  const [userProfile, setUserProfile] = useState({
+    fullName: '',
+    email: '',
+    department: '',
+    year: '',
+    skills: [],
+    experienceLevel: 'Intermediate'
+  });
 
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  useEffect(() => {
+    // Clear out old tokens automatically on refresh to force dev flow
+    setIsAuthenticated(false);
+    localStorage.removeItem('access_token');
+    sessionStorage.removeItem('access_token');
+  }, []);
+
+  // Fetch updated student profile and skills from Supabase database whenever tab changes
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    const fetchLatestProfile = async () => {
+      try {
+        const profile = await apiService.getMe();
+        setUserProfile({
+          fullName: profile.name,
+          email: profile.email,
+          department: profile.department,
+          year: profile.year,
+          student_id: profile.student_id,
+          skills: profile.skills || [],
+          experienceLevel: profile.experience_level || 'Intermediate'
+        });
+      } catch (err) {
+        console.error("Failed to refresh student profile:", err);
+      }
+    };
+    fetchLatestProfile();
+  }, [currentTab, isAuthenticated]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('access_token');
+    sessionStorage.removeItem('access_token');
+    setUserProfile({ fullName: '', email: '', department: '', year: '', skills: [] });
+    setIsAuthenticated(false);
   };
 
-  const isDark = theme === 'dark';
+  const handleAuthSuccess = (isNewUser) => {
+    setIsAuthenticated(true);
+    setCurrentTab(isNewUser ? 'skills' : 'dashboard');
+  };
 
+  // If not authenticated, show either Landing or AuthGateway
+  // We'll use a simple state just for the initial landing vs auth gate
+  const [showAuth, setShowAuth] = useState(false);
+
+  if (!isAuthenticated) {
+    if (showAuth) {
+      return <AuthGateway onAuthSuccess={handleAuthSuccess} setUserProfile={setUserProfile} />;
+    }
+    return <LandingPage onGetStarted={() => setShowAuth(true)} />;
+  }
+
+  // --- Main Authenticated Layout ---
   return (
-    <div className={`flex h-screen w-screen font-sans transition-colors duration-700 overflow-hidden ${
-      isDark ? 'bg-premium-slate text-premium-white' : 'bg-premium-offwhite text-premium-slate'
-    }`}>
+    <div className="flex h-screen bg-slate-50 font-sans antialiased overflow-hidden">
       
-      {/* LEFT PANEL: Sticky Branding (25%) */}
-      <aside className={`hidden lg:flex flex-col justify-between w-[25%] h-full p-8 relative overflow-hidden transition-colors duration-700 ${
-        isDark ? 'bg-premium-surface' : 'bg-premium-white border-r border-gray-200'
-      }`}>
-        {/* Dynamic Gradient Orb */}
-        <div className={`absolute -top-40 -left-40 w-96 h-96 rounded-full blur-[100px] opacity-40 mix-blend-screen pointer-events-none transition-all duration-1000 ${
-          isDark ? 'bg-gradient-to-tr from-premium-royal to-premium-violet' : 'bg-gradient-to-tr from-premium-royal/50 to-premium-violet/50'
-        }`}></div>
+      {/* Sidebar Navigation */}
+      <Sidebar 
+        currentTab={currentTab} 
+        setCurrentTab={setCurrentTab} 
+        onLogout={handleLogout} 
+      />
 
-        {/* Top Header */}
-        <div className="relative z-10 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className={`h-8 w-8 rounded-xl bg-gradient-to-br from-premium-royal to-premium-violet flex items-center justify-center shadow-lg shadow-premium-royal/30`}>
-              <div className="h-3 w-3 bg-white rounded-full"></div>
-            </div>
-            <span className="font-serif text-lg font-bold tracking-tight">AI Academic</span>
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col h-full overflow-hidden">
+        
+        {/* Top Navbar */}
+        <header className="bg-white border-b border-slate-200 h-16 flex items-center justify-between px-8 shrink-0">
+          <div className="text-xl font-bold text-slate-800 capitalize">
+            {currentTab.replace('_', ' ')}
           </div>
-        </div>
+          
+          <div className="flex items-center space-x-6">
+            <button className="text-slate-400 hover:text-slate-600 transition-colors">
+              <span className="text-xl">🔔</span>
+            </button>
+            <div className="flex items-center space-x-3 border-l border-slate-200 pl-6">
+              <div className="flex flex-col text-right">
+                <span className="text-sm font-bold text-slate-900 leading-tight">
+                  {userProfile.fullName || 'Student Name'}
+                </span>
+                <span className="text-xs font-semibold text-slate-500">Student</span>
+              </div>
+              <div className="w-10 h-10 rounded-full bg-[#0252CD] flex items-center justify-center text-white font-bold shadow-sm">
+                {userProfile.fullName ? userProfile.fullName.charAt(0).toUpperCase() : 'S'}
+              </div>
+            </div>
+          </div>
+        </header>
 
-        {/* Center Content */}
-        <div className="relative z-10 space-y-6">
-          <h1 className="text-4xl font-serif font-bold leading-[1.1] tracking-tight">
-            Design <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-premium-royal via-premium-violet to-premium-crimson">
-              The Future.
-            </span>
-          </h1>
-          <p className={`text-xs leading-relaxed max-w-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-            Welcome to the AI Academic Project portal. Initialize your profile to begin the Milestone 1 onboarding sequence.
-          </p>
-        </div>
+        {/* Scrollable Page Content */}
+        <main className="flex-1 overflow-y-auto p-8">
+          <div className="max-w-7xl mx-auto">
+            {currentTab === 'dashboard' && <DashboardView userProfile={userProfile} onNavigate={setCurrentTab} />}
+            {currentTab === 'skills' && <SkillAssessment userProfile={userProfile} onComplete={() => setCurrentTab('project')} />}
+            {currentTab === 'project' && <ProjectSubmission onSubmitSuccess={() => setCurrentTab('dashboard')} onBack={() => setCurrentTab('dashboard')} />}
+            
+            {currentTab === 'profile' && (
+              <ProfileView 
+                userProfile={userProfile} 
+                onProfileUpdate={async () => {
+                  try {
+                    const profile = await apiService.getMe();
+                    setUserProfile({
+                      fullName: profile.name,
+                      email: profile.email,
+                      department: profile.department,
+                      year: profile.year,
+                      student_id: profile.student_id,
+                      skills: profile.skills || [],
+                      experienceLevel: profile.experience_level || 'Intermediate'
+                    });
+                  } catch (e) {
+                    console.error("Failed to update user profile in callback:", e);
+                  }
+                }}
+              />
+            )}
+            {currentTab === 'pipeline_demo' && <AIPipelineDemoView />}
+            {currentTab === 'chat' && (
+              <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm text-center">
+                <h2 className="text-2xl font-bold text-slate-800">Mentor Chat</h2>
+                <p className="text-slate-500 mt-2">Coming soon...</p>
+              </div>
+            )}
+            {currentTab === 'reports' && (
+              <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm text-center">
+                <h2 className="text-2xl font-bold text-slate-800">Reports</h2>
+                <p className="text-slate-500 mt-2">Coming soon...</p>
+              </div>
+            )}
+            {currentTab === 'settings' && (
+              <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm text-center">
+                <h2 className="text-2xl font-bold text-slate-800">Settings</h2>
+                <p className="text-slate-500 mt-2">Coming soon...</p>
+              </div>
+            )}
+          </div>
+        </main>
 
-        {/* Bottom Footer */}
-        <div className="relative z-10 flex items-center justify-between border-t pt-6 border-gray-500/20">
-          <p className="text-[10px] font-bold uppercase tracking-widest opacity-40">Milestone 01</p>
-          <button 
-            onClick={toggleTheme}
-            className={`text-[10px] font-bold uppercase tracking-widest px-4 py-2 rounded-lg transition-all ${
-              isDark ? 'bg-white/5 hover:bg-white/10' : 'bg-gray-100 hover:bg-gray-200'
-            }`}
-          >
-            {isDark ? 'Light Mode' : 'Dark Mode'}
-          </button>
-        </div>
-      </aside>
-
-      {/* RIGHT PANEL: Scrollable Form Area (65%) */}
-      <main className="flex-1 h-full overflow-y-auto relative scroll-smooth">
-        <Onboarding theme={theme} toggleTheme={toggleTheme} />
-      </main>
-      
+      </div>
     </div>
   );
 }
