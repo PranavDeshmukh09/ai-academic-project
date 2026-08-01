@@ -1,0 +1,9 @@
+{
+  "name": "ai-academic-project-root",
+  "version": "1.0.0",
+  "description": "Root package to run both frontend and backend concurrently",
+  "scripts": {
+    "dev": "cd frontend && npm run dev",
+    "install:all": "cd frontend && npm install"
+  }
+}
