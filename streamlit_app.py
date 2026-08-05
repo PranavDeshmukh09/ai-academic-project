@@ -109,9 +109,9 @@ else:
     st.success(f"✅ Project **{st.session_state.project_id}** initialized successfully! All agent outputs are below.")
     st.markdown("---")
 
-    # Show all 7 agent outputs in organized tabs
-    tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
-        "📈 Skills", "📝 Evaluation", "📅 Plan", "💻 Tech Stack", "⚠️ Risks", "🤝 Mentor", "📚 Final Docs"
+    # Show all agent outputs in organized tabs
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10 = st.tabs([
+        "📈 Skills", "📝 Evaluation", "📅 Plan", "💻 Tech Stack", "⚠️ Risks", "🤝 Mentor", "📚 Final Docs", "🔄 Progress", "📅 Check-in", "📄 Gen Docs"
     ])
     
     with tab1:
@@ -135,7 +135,65 @@ else:
     with tab7:
         st.subheader("📚 Final Documentation")
         st.markdown(data.get("final_documentation") or "_No documentation generated._")
-    
+        
+    with tab8:
+        st.subheader("🔄 Submit Progress Update")
+        progress_text = st.text_area("What did you accomplish this week?", placeholder="e.g. I finished setting up the database and wrote the API endpoints.")
+        if st.button("Submit Update & Adjust Plan", type="primary"):
+            if progress_text:
+                with st.spinner("Adjusting project plan..."):
+                    try:
+                        res = requests.post(f"{API_URL}/progress_update", json={"project_id": st.session_state.project_id, "update_text": progress_text})
+                        if res.status_code == 200:
+                            st.success("Plan updated successfully! Check the '📅 Plan' tab.")
+                            st.session_state.latest_insight["project_plan"] = res.json().get("project_plan")
+                            st.rerun()
+                        else:
+                            st.error(f"Error: {res.text}")
+                    except Exception as e:
+                        st.error(f"Connection Error: {e}")
+            else:
+                st.warning("Please enter your progress update.")
+
+    with tab9:
+        st.subheader("📅 Weekly Check-in")
+        if st.button("Run Weekly Check-in", type="primary"):
+            with st.spinner("Mentor is reviewing your progress..."):
+                try:
+                    res = requests.post(f"{API_URL}/check_in", json={"project_id": st.session_state.project_id})
+                    if res.status_code == 200:
+                        report = res.json().get("check_in_report", "")
+                        st.session_state.latest_insight["check_in_report"] = report
+                        st.rerun()
+                    else:
+                        st.error(f"Error: {res.text}")
+                except Exception as e:
+                    st.error(f"Connection Error: {e}")
+        
+        if st.session_state.latest_insight.get("check_in_report"):
+            st.markdown(st.session_state.latest_insight["check_in_report"])
+            
+    with tab10:
+        st.subheader("📄 On-Demand Document Generation")
+        doc_type = st.selectbox("Select Document Type", ["Synopsis", "Methodology", "Progress Report", "Final Thesis Outline"])
+        if st.button("Generate Document", type="primary"):
+            with st.spinner(f"Generating {doc_type}..."):
+                try:
+                    res = requests.post(f"{API_URL}/generate_document", json={"project_id": st.session_state.project_id, "doc_type": doc_type})
+                    if res.status_code == 200:
+                        doc = res.json().get("generated_document", "")
+                        st.session_state.latest_insight["generated_document"] = doc
+                        st.rerun()
+                    else:
+                        st.error(f"Error: {res.text}")
+                except Exception as e:
+                    st.error(f"Connection Error: {e}")
+                    
+        if st.session_state.latest_insight.get("generated_document"):
+            st.markdown("### Generated Document")
+            st.markdown(st.session_state.latest_insight["generated_document"])
+            st.download_button("Download Markdown", st.session_state.latest_insight["generated_document"], file_name=f"{doc_type.lower().replace(' ', '_')}.md")
+
     # ---- BOTTOM SECTION: CHAT INTERFACE ----
     st.markdown("---")
     st.subheader("💬 Chat with your AI Mentor")

@@ -8,7 +8,7 @@ from supabase import create_client, Client
 from dotenv import load_dotenv
 # Import our custom AI logic
 from memory import load_memory, save_memory
-from multi_agent_ai import initialization_app, chat_app
+from multi_agent_ai import initialization_app, chat_app, plan_adjustment_app, weekly_checkin_app, document_generation_app
 from Rag_system import ingest_document, ingest_text, retrive_documents, pc
 
 
@@ -48,6 +48,17 @@ class OnboardingData(BaseModel):
 class ChatInput(BaseModel):
     project_id: int
     message: str = ""
+
+class ProgressInput(BaseModel):
+    project_id: int
+    update_text: str
+
+class DocInput(BaseModel):
+    project_id: int
+    doc_type: str
+
+class CheckinInput(BaseModel):
+    project_id: int
 
 # --- ENDPOINTS ---
 
@@ -188,6 +199,91 @@ def chat(request: ChatInput):
         "chat_reply": res.get("chat_reply", ""),
         "agents_executed": res.get("agents_executed", []),
     }
+
+@app.post("/progress_update")
+def progress_update(request: ProgressInput):
+    print(f"--- 🔄 Received progress update for project {request.project_id} ---")
+    initial_state = load_memory(request.project_id)
+    initial_state["progress_update"] = request.update_text
+    initial_state["agents_executed"] = []
+    
+    res = plan_adjustment_app.invoke(initial_state)
+    save_memory(request.project_id, res)
+    
+    return {
+        "status": "success",
+        "project_plan": res.get("project_plan", ""),
+        "agents_executed": res.get("agents_executed", [])
+    }
+
+@app.post("/check_in")
+def weekly_checkin(request: CheckinInput):
+    print(f"--- 📅 Running weekly check-in for project {request.project_id} ---")
+    initial_state = load_memory(request.project_id)
+    initial_state["agents_executed"] = []
+    
+    res = weekly_checkin_app.invoke(initial_state)
+    # Save memory to persist any updates, though we mostly just want the report back
+    save_memory(request.project_id, res)
+    
+    return {
+        "status": "success",
+        "check_in_report": res.get("check_in_report", ""),
+        "agents_executed": res.get("agents_executed", [])
+    }
+
+@app.post("/generate_document")
+def generate_document(request: DocInput):
+    print(f"--- 📄 Generating document {request.doc_type} for project {request.project_id} ---")
+    initial_state = load_memory(request.project_id)
+    initial_state["document_type"] = request.doc_type
+    initial_state["agents_executed"] = []
+    
+    res = document_generation_app.invoke(initial_state)
+    
+    return {
+        "status": "success",
+        "generated_document": res.get("generated_document", ""),
+        "agents_executed": res.get("agents_executed", [])
+    }
+
+@app.get("/faculty/dashboard")
+def get_faculty_dashboard():
+    """Fetches all student projects and their latest AI summaries for the faculty dashboard."""
+    if not supabase:
+        raise HTTPException(status_code=500, detail="Database not configured")
+        
+    try:
+        # Fetch all students, ideas, and agent outputs
+        students = supabase.table("student").select("*").execute()
+        ideas = supabase.table("project_idea").select("*").execute()
+        agent_outputs = supabase.table("agent_output").select("project_id, risk_analysis, project_plan, check_in_report").execute()
+        
+        dashboard_data = []
+        for student in students.data:
+            s_id = student.get("student_id")
+            # Find associated idea
+            idea = next((i for i in ideas.data if i.get("student_id") == s_id), {})
+            p_id = idea.get("project_id")
+            
+            # Find associated agent output if it exists
+            output = next((o for o in agent_outputs.data if o.get("project_id") == p_id), {}) if p_id else {}
+            
+            dashboard_data.append({
+                "student_id": s_id,
+                "name": student.get("name", "Unknown"),
+                "department": student.get("department", "Unknown"),
+                "project_id": p_id,
+                "project_title": idea.get("title", "No Title Submitted"),
+                "domain": idea.get("domain", "Unknown"),
+                "has_been_initialized": bool(p_id and output),
+                "risk_analysis_summary": output.get("risk_analysis", "Not analyzed yet")[:200] + "..." if output.get("risk_analysis") else "Not analyzed yet",
+                "latest_checkin": output.get("check_in_report", "No check-ins yet")
+            })
+            
+        return {"status": "success", "total_projects": len(dashboard_data), "projects": dashboard_data}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
 
 
 @app.get("/health/supabase")
