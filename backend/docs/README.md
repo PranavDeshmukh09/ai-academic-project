@@ -77,3 +77,51 @@ Submits a new project idea. Requires a valid JWT token (Authorization header).
     }
 
 **Response:** Confirms submission with a project_id and status ("Pending Evaluation"). The student is automatically identified from the login token.
+
+### POST /agents/mentor-chat
+Sends a message to the AI mentor and receives a contextual reply. Requires a valid JWT token in the Authorization header. Supports conversation memory via the optional `history` field.
+
+**Request headers**
+
+Authorization: Bearer <access_token>
+
+**Request body**
+```json
+{
+  "message": "string",
+  "history": [
+    {"role": "user", "content": "string"},
+    {"role": "assistant", "content": "string"}
+  ]
+}
+```
+
+**Response**
+```json
+{
+  "reply": "string"
+}
+```
+
+### POST /agents/progress
+Analyzes a student's progress update against their current plan. Requires a valid JWT token in the Authorization header.
+
+**Request headers**
+
+Authorization: Bearer <access_token>
+
+**Request body**
+```json
+{
+  "project_title": "string",
+  "current_plan": "string",
+  "student_update": "string"
+}
+```
+
+**Response**
+```json
+{
+  "analysis": "string"
+}
+```
