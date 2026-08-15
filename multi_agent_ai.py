@@ -1,5 +1,7 @@
 
 import os
+import sys
+import json
 import time
 from dotenv import load_dotenv
 from typing import TypedDict, Annotated
@@ -7,7 +9,6 @@ import operator
 from langgraph.graph import StateGraph, START, END
 from langchain_core.messages import HumanMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
-import sys
 
 
 sys.stdout.reconfigure(encoding='utf-8')
@@ -329,19 +330,44 @@ def weekly_checkin_agent(state: Agent_State):
     
     prompt = f"""You are a strict but encouraging Academic Mentor conducting a weekly check-in.
     Review the project plan and the student's latest progress update.
-    Summarize their performance this week, highlight any deviations from the plan, and set specific, actionable goals for the upcoming week.
+    
+    You must evaluate their progress and provide both a student-facing report and a faculty-facing health status.
     
     Project Plan: {plan}
     Latest Progress Update: {update}
     
-    Provide a professional mentor check-in report.
+    CRITICAL INSTRUCTION: You MUST return your response as a valid JSON object with EXACTLY this structure:
+    {{
+        "health_status": "On Track" or "Behind Schedule" or "At Risk",
+        "faculty_summary": "A concise 1-2 sentence summary of their status for the professor.",
+        "student_feedback": "Your full, encouraging markdown mentor report addressed to the student. Summarize their performance this week, highlight any deviations from the plan, and set specific, actionable goals for the upcoming week."
+    }}
+    Do not wrap the JSON in markdown code blocks. Just output raw JSON.
     """
-    result = safe_invoke(prompt)
-    return {"check_in_report": result, "agents_executed": ["📅 Check-in Mentor"]}
+    result = safe_invoke(prompt).strip()
+    
+    # Robust fallback JSON parsing
+    if result.startswith("```json"):
+        result = result[7:-3].strip()
+    elif result.startswith("```"):
+        result = result[3:-3].strip()
+        
+    try:
+        parsed = json.loads(result)
+        # Store the entire JSON string in check_in_report for memory persistence, or return a combined string
+        return {"check_in_report": json.dumps(parsed), "agents_executed": ["📅 Check-in Mentor"]}
+    except Exception as e:
+        # Fallback if LLM fails JSON
+        fallback_json = {
+            "health_status": "Unknown",
+            "faculty_summary": "Error generating summary.",
+            "student_feedback": result
+        }
+        return {"check_in_report": json.dumps(fallback_json), "agents_executed": ["📅 Check-in Mentor (Fallback)"]}
 
 
 def document_generation_agent(state: Agent_State):
-    print(f"--- 📄 Generating Document: {{state.get('document_type', 'Document')}} ---")
+    print(f"--- 📄 Generating Document: {state.get('document_type', 'Document')} ---")
     doc_type = state.get('document_type', 'Synopsis')
     idea = state.get('project_idea', '')
     plan = state.get('project_plan', '')

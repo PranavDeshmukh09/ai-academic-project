@@ -1,7 +1,11 @@
 import os
+import json
+import csv
+import io
 import shutil
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel
 from typing import List
 from supabase import create_client, Client
@@ -79,8 +83,12 @@ def onboard_student(data: OnboardingData):
     try:
         supabase.table("student").upsert(student_record).execute()
         supabase.table("skill_assessment").upsert(skill_record).execute()
-        supabase.table("project_idea").upsert(idea_record).execute()
-        return {"status": "success", "message": f"Student {data.student_id} onboarded successfully!"}
+        idea_res = supabase.table("project_idea").upsert(idea_record).execute()
+        
+        # Extract the auto-generated project_id so the frontend can use it
+        project_id = idea_res.data[0].get("project_id") if idea_res.data else None
+        
+        return {"status": "success", "message": f"Student {data.student_id} onboarded successfully!", "project_id": project_id}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
 
@@ -269,6 +277,21 @@ def get_faculty_dashboard():
             # Find associated agent output if it exists
             output = next((o for o in agent_outputs.data if o.get("project_id") == p_id), {}) if p_id else {}
             
+            check_in_raw = output.get("check_in_report", "")
+            health_status = "Unknown"
+            faculty_summary = "No check-ins yet"
+            student_feedback = "No check-ins yet"
+            
+            if check_in_raw:
+                try:
+                    parsed_checkin = json.loads(check_in_raw)
+                    health_status = parsed_checkin.get("health_status", "Unknown")
+                    faculty_summary = parsed_checkin.get("faculty_summary", "No summary provided.")
+                    student_feedback = parsed_checkin.get("student_feedback", check_in_raw)
+                except (json.JSONDecodeError, ValueError, TypeError):
+                    # Fallback if it's not JSON
+                    student_feedback = check_in_raw
+            
             dashboard_data.append({
                 "student_id": s_id,
                 "name": student.get("name", "Unknown"),
@@ -277,13 +300,49 @@ def get_faculty_dashboard():
                 "project_title": idea.get("title", "No Title Submitted"),
                 "domain": idea.get("domain", "Unknown"),
                 "has_been_initialized": bool(p_id and output),
+                "health_status": health_status,
+                "faculty_summary": faculty_summary,
                 "risk_analysis_summary": output.get("risk_analysis", "Not analyzed yet")[:200] + "..." if output.get("risk_analysis") else "Not analyzed yet",
-                "latest_checkin": output.get("check_in_report", "No check-ins yet")
+                "latest_checkin": student_feedback
             })
             
         return {"status": "success", "total_projects": len(dashboard_data), "projects": dashboard_data}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+
+@app.get("/faculty/dashboard/export")
+def export_faculty_dashboard():
+    """Exports the dashboard data as a CSV file for faculty download."""
+    data = get_faculty_dashboard()
+    if data.get("status") != "success":
+        raise HTTPException(status_code=500, detail="Failed to load dashboard data.")
+    
+    projects = data.get("projects", [])
+    
+    output = io.StringIO()
+    writer = csv.writer(output)
+    
+    # Write header
+    writer.writerow([
+        "Student ID", "Name", "Department", "Project Title", "Domain", 
+        "Initialized", "Health Status", "Faculty Summary"
+    ])
+    
+    # Write rows
+    for p in projects:
+        writer.writerow([
+            p.get("student_id", ""),
+            p.get("name", ""),
+            p.get("department", ""),
+            p.get("project_title", ""),
+            p.get("domain", ""),
+            "Yes" if p.get("has_been_initialized") else "No",
+            p.get("health_status", ""),
+            p.get("faculty_summary", "")
+        ])
+        
+    csv_string = output.getvalue()
+    return PlainTextResponse(content=csv_string, media_type="text/csv", headers={"Content-Disposition": "attachment; filename=faculty_dashboard_export.csv"})
 
 
 @app.get("/health/supabase")

@@ -59,7 +59,7 @@ def load_memory(project_id: int):
     if memory_data:
         expected_keys = [
             "skill_report", "project_evaluation", "project_plan", 
-            "tech_stack", "risk_analysis", "mentor_advice", "final_documentation"
+            "tech_stack", "risk_analysis", "mentor_advice", "final_documentation", "check_in_report"
         ]
         for key in expected_keys:
             if memory_data.get(key):
@@ -96,16 +96,20 @@ def save_memory(project_id: int, result: dict):
             return "\n".join(str(v) for v in val)
         return str(val) if val else ""
 
-    record = {
-        "project_id": project_id,
-        "skill_report": _clean(result.get("skill_report", "")),
-        "project_evaluation": _clean(result.get("project_evaluation", "")),
-        "project_plan": _clean(result.get("project_plan", "")),
-        "tech_stack": _clean(result.get("tech_stack", "")),
-        "risk_analysis": _clean(result.get("risk_analysis", "")),
-        "mentor_advice": _clean(result.get("mentor_advice", "")),
-        "final_documentation": _clean(result.get("final_documentation", ""))
-    }
+    # Only write fields that the current agent run actually produced.
+    # This prevents a /chat call (which only produces chat_reply) from
+    # overwriting skill_report, project_plan, etc. with empty strings.
+    all_fields = [
+        "skill_report", "project_evaluation", "project_plan",
+        "tech_stack", "risk_analysis", "mentor_advice", 
+        "final_documentation", "check_in_report"
+    ]
+    
+    record = {"project_id": project_id}
+    for field in all_fields:
+        value = result.get(field)
+        if value:  # Only include fields that have actual content
+            record[field] = _clean(value)
 
     existing = supabase.table("agent_output").select("output_id").eq("project_id", project_id).execute()
     if existing.data:

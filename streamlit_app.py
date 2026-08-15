@@ -15,10 +15,15 @@ if "latest_insight" not in st.session_state:
     st.session_state.latest_insight = None
 if "initialized" not in st.session_state:
     st.session_state.initialized = False
+if "faculty_view" not in st.session_state:
+    st.session_state.faculty_view = False
 
 # --- LEFT SIDEBAR (Controls & Uploads) ---
 with st.sidebar:
     st.title("⚙️ Mentor Controls")
+    
+    st.session_state.faculty_view = st.toggle("👨‍🏫 Switch to Faculty View", value=st.session_state.faculty_view)
+    st.divider()
     
     # 1. Project Identity
     st.subheader("🔑 Project Setup")
@@ -78,6 +83,46 @@ with st.sidebar:
 # =============================================
 # MAIN CONTENT AREA
 # =============================================
+
+# --- FACULTY DASHBOARD VIEW ---
+if st.session_state.faculty_view:
+    st.title("👨‍🏫 Faculty Monitoring Dashboard")
+    st.markdown("Overview of all student projects and their real-time health metrics.")
+    
+    with st.spinner("Fetching data from backend..."):
+        try:
+            res = requests.get(f"{API_URL}/faculty/dashboard")
+            if res.status_code == 200:
+                dashboard_data = res.json()
+                projects = dashboard_data.get("projects", [])
+                
+                if not projects:
+                    st.info("No projects found in the database.")
+                else:
+                    import pandas as pd
+                    df = pd.DataFrame(projects)
+                    
+                    # Display metrics
+                    st.metric("Total Active Projects", len(projects))
+                    
+                    # Display dataframe
+                    st.dataframe(df, use_container_width=True)
+                    
+                    # Export button
+                    export_res = requests.get(f"{API_URL}/faculty/dashboard/export")
+                    if export_res.status_code == 200:
+                        st.download_button(
+                            label="📥 Download CSV Report",
+                            data=export_res.content,
+                            file_name="faculty_dashboard_export.csv",
+                            mime="text/csv"
+                        )
+            else:
+                st.error("Failed to load dashboard data.")
+        except Exception as e:
+            st.error(f"Connection Error: {e}")
+            
+    st.stop()  # Stop rendering the student view below
 
 # --- STATE 1: NOT INITIALIZED YET → Show welcome screen ---
 if not st.session_state.initialized:
@@ -171,7 +216,13 @@ else:
                     st.error(f"Connection Error: {e}")
         
         if st.session_state.latest_insight.get("check_in_report"):
-            st.markdown(st.session_state.latest_insight["check_in_report"])
+            raw_report = st.session_state.latest_insight["check_in_report"]
+            try:
+                parsed_report = json.loads(raw_report)
+                display_text = parsed_report.get("student_feedback", raw_report)
+            except:
+                display_text = raw_report
+            st.markdown(display_text)
             
     with tab10:
         st.subheader("📄 On-Demand Document Generation")

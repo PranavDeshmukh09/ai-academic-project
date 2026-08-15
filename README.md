@@ -72,9 +72,20 @@ streamlit run streamlit_app.py
 ---
 
 ## Usage Instructions
-1. Open the Streamlit Dashboard in your browser.
-2. In the left sidebar, enter a **Project ID** that already exists in your Supabase `project_idea` table.
-3. (Optional) Upload reference documents (PDFs) to add context to the Pinecone RAG knowledge base.
-4. Click **Initialize Project**. The system will run the 7-agent LangGraph sequence, generating a comprehensive Project Evaluation, Tech Stack, Timeline, and README.
-5. Once completed, explore the generated artifacts across the different tabs.
-6. Use the chat interface at the bottom to have a contextual conversation with the unified AI Mentor!
+
+### Student Lifecycle
+1. **Onboarding**: POST `/onboard` to register a student and create a project profile.
+2. **Initialization**: POST `/initialize` to trigger the 7-agent pipeline. Generates Tech Stack, Plan, and Risk Analysis.
+3. **Progress Updates**: POST `/progress_update` with a natural language string. The AI dynamically adjusts the Gantt chart without extending the final deadline.
+4. **Weekly Check-ins**: POST `/check_in` for conversational feedback and goal setting.
+5. **Document Generation**: POST `/generate_document` to instantly build a Synopsis or Thesis Outline.
+
+### Faculty Tools
+- **Dashboard**: GET `/faculty/dashboard` returns a JSON array of all active projects, featuring auto-generated health indicators (On Track, Behind Schedule, At Risk) and AI-generated mentor summaries.
+- **Data Export**: GET `/faculty/dashboard/export` downloads the current dashboard state as a CSV.
+
+### Testing Locally
+You can run the simulated workflow by executing:
+```bash
+python test_pipeline.py
+```

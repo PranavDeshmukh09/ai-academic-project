@@ -13,6 +13,7 @@ pinecone-client
 langchain
 langgraph
 langchain-groq
+langchain-google-genai
 
 # RAG specific libraries
 langchain-huggingface
