@@ -298,7 +298,9 @@ def chat_responder_agent(state: Agent_State):
 
 def plan_adjustment_agent(state: Agent_State):
     print("--- 🔄 Adjusting Project Plan... ---")
-    plan = state['project_plan']
+    plan = state.get('project_plan', '')
+    if not plan:
+        return {"project_plan": "Error: No project plan found. Please run /initialize first.", "agents_executed": ["🔄 Plan Adjuster (Skipped — No Plan)"]}
     update = state.get('progress_update', '')
     
     prompt = f"""You are an Agile Project Manager for an Academic Institution.
@@ -325,7 +327,10 @@ def plan_adjustment_agent(state: Agent_State):
 
 def weekly_checkin_agent(state: Agent_State):
     print("--- 📅 Weekly Check-in... ---")
-    plan = state['project_plan']
+    plan = state.get('project_plan', '')
+    if not plan:
+        fallback = json.dumps({"health_status": "Unknown", "faculty_summary": "Project not initialized yet.", "student_feedback": "Please run /initialize before running a check-in."})
+        return {"check_in_report": fallback, "agents_executed": ["📅 Check-in Mentor (Skipped — No Plan)"]}
     update = state.get('progress_update', 'No update provided.')
     
     prompt = f"""You are a strict but encouraging Academic Mentor conducting a weekly check-in.

@@ -140,6 +140,11 @@ class InitInput(BaseModel):
 def initialize_project(request: InitInput):
     print(f"--- 🚀 Starting Initialization Pipeline for project {request.project_id} ---")
     
+    # Validate project exists
+    idea_check = supabase.table("project_idea").select("project_id").eq("project_id", request.project_id).execute()
+    if not idea_check.data:
+        raise HTTPException(status_code=404, detail=f"Project {request.project_id} not found. Please run /onboard first.")
+    
     # 1. Load basic memory 
     initial_state = load_memory(request.project_id)
     initial_state["agents_executed"] = []
@@ -179,6 +184,15 @@ def chat(request: ChatInput):
     """The core AI Engine endpoint."""
     print(f"received chat request for the project {request.project_id} ....")
     
+    # Validate project exists
+    idea_check = supabase.table("project_idea").select("project_id").eq("project_id", request.project_id).execute()
+    if not idea_check.data:
+        raise HTTPException(status_code=404, detail=f"Project {request.project_id} not found.")
+    
+    # Validate not empty message
+    if not request.message or not request.message.strip():
+        raise HTTPException(status_code=400, detail="Message cannot be empty.")
+    
     # 1. Load memory from DB
     initial_state = load_memory(request.project_id)
     initial_state["new_message"] = request.message
@@ -211,6 +225,12 @@ def chat(request: ChatInput):
 @app.post("/progress_update")
 def progress_update(request: ProgressInput):
     print(f"--- 🔄 Received progress update for project {request.project_id} ---")
+    
+    # Validate project exists and has been initialized
+    output_check = supabase.table("agent_output").select("project_id").eq("project_id", request.project_id).execute()
+    if not output_check.data:
+        raise HTTPException(status_code=400, detail=f"Project {request.project_id} has not been initialized yet. Please run /initialize first.")
+    
     initial_state = load_memory(request.project_id)
     initial_state["progress_update"] = request.update_text
     initial_state["agents_executed"] = []
@@ -227,6 +247,12 @@ def progress_update(request: ProgressInput):
 @app.post("/check_in")
 def weekly_checkin(request: CheckinInput):
     print(f"--- 📅 Running weekly check-in for project {request.project_id} ---")
+    
+    # Validate project exists and has been initialized
+    output_check = supabase.table("agent_output").select("project_id").eq("project_id", request.project_id).execute()
+    if not output_check.data:
+        raise HTTPException(status_code=400, detail=f"Project {request.project_id} has not been initialized yet. Please run /initialize first.")
+    
     initial_state = load_memory(request.project_id)
     initial_state["agents_executed"] = []
     
