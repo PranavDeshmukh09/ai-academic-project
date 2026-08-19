@@ -269,6 +269,12 @@ def weekly_checkin(request: CheckinInput):
 @app.post("/generate_document")
 def generate_document(request: DocInput):
     print(f"--- 📄 Generating document {request.doc_type} for project {request.project_id} ---")
+    
+    # Validate project exists and has been initialized
+    output_check = supabase.table("agent_output").select("project_id").eq("project_id", request.project_id).execute()
+    if not output_check.data:
+        raise HTTPException(status_code=400, detail=f"Project {request.project_id} has not been initialized yet. Please run /initialize first.")
+        
     initial_state = load_memory(request.project_id)
     initial_state["document_type"] = request.doc_type
     initial_state["agents_executed"] = []
@@ -291,7 +297,7 @@ def get_faculty_dashboard():
         # Fetch all students, ideas, and agent outputs
         students = supabase.table("student").select("*").execute()
         ideas = supabase.table("project_idea").select("*").execute()
-        agent_outputs = supabase.table("agent_output").select("project_id, risk_analysis, project_plan, check_in_report").execute()
+        agent_outputs = supabase.table("agent_output").select("*").execute()
         
         dashboard_data = []
         for student in students.data:

@@ -373,10 +373,10 @@ def weekly_checkin_agent(state: Agent_State):
 
 def document_generation_agent(state: Agent_State):
     print(f"--- 📄 Generating Document: {state.get('document_type', 'Document')} ---")
-    doc_type = state.get('document_type', 'Synopsis')
-    idea = state.get('project_idea', '')
-    plan = state.get('project_plan', '')
-    tech = state.get('tech_stack', '')
+    doc_type = state.get('document_type', 'System Architecture Document')
+    idea = state.get('project_idea', 'No project idea provided.')
+    plan = state.get('project_plan', 'No project plan available.')
+    tech = state.get('tech_stack', 'No tech stack defined.')
     
     prompt = f"""You are an expert Technical Writer.
     The user has requested a specific document type: {doc_type}.
