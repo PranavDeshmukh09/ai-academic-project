@@ -225,3 +225,13 @@ backend/app/routers/__pycache__/
 backend/.env
 node_modules/
 frontend/node_modules/
+
+# Microsoft Excel temporary lock files
+~$*.xlsx
+~$*.xls
+
+# OS and Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
