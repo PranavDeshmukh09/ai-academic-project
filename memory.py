@@ -11,6 +11,49 @@ load_dotenv()
 supabase: Client = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
 
 
+def _clean_text(val):
+    if not val:
+        return ""
+    if isinstance(val, list):
+        val = "\n".join(
+            v.get("text", str(v)) if isinstance(v, dict) else str(v)
+            for v in val
+        )
+    text = str(val).strip()
+    
+    if text.startswith("```json"):
+        text = text[7:]
+        if text.endswith("```"):
+            text = text[:-3]
+        text = text.strip()
+    elif text.startswith("```markdown"):
+        text = text[11:]
+        if text.endswith("```"):
+            text = text[:-3]
+        text = text.strip()
+        
+    if text.startswith("{") and text.endswith("}"):
+        try:
+            import json
+            parsed = json.loads(text, strict=False)
+            if isinstance(parsed, dict):
+                text = parsed.get("reply") or parsed.get("chat_reply") or parsed.get("content") or parsed.get("message_text") or text
+        except Exception:
+            import re
+            m = re.search(r'"reply"\s*:\s*"(.*)"', text, re.DOTALL)
+            if m:
+                text = m.group(1)
+
+    if "\\n" in text:
+        text = text.replace("\\n", "\n")
+    if "\\\"" in text:
+        text = text.replace("\\\"", '"')
+    if "\\t" in text:
+        text = text.replace("\\t", "\t")
+        
+    return text.strip()
+
+
 def load_memory(project_id: int):
     print(f"--- 📥 Loading full context from DB for project {project_id} ---")
     
@@ -40,7 +83,8 @@ def load_memory(project_id: int):
     if chat_res.data:
         for msg in chat_res.data:
             prefix = "User" if msg["role"] == "user" else "AI"
-            chat_history_str += f"\n{prefix}: {msg['content']}"
+            clean_content = _clean_text(msg['content'])
+            chat_history_str += f"\n{prefix}: {clean_content}"
 
     # 5. Format DB rows into text for the LLM
     profile_text = f"Name: {student_data.get('name', 'Unknown')}, Department: {student_data.get('department', 'Unknown')}, Year: {student_data.get('year', 'Unknown')}"
@@ -63,7 +107,7 @@ def load_memory(project_id: int):
         ]
         for key in expected_keys:
             if memory_data.get(key):
-                state_updates[key] = memory_data[key]
+                state_updates[key] = _clean_text(memory_data[key])
                 
     if chat_history_str:
         state_updates["chat_history"] = chat_history_str
@@ -80,31 +124,26 @@ def save_memory(project_id: int, result: dict):
         supabase.table("chat_messages").insert({
             "project_id": project_id,
             "role": "user",
-            "content": new_message
+            "content": _clean_text(new_message)
         }).execute()
     
     if chat_reply:
+        cleaned_reply = _clean_text(chat_reply)
         supabase.table("chat_messages").insert({
             "project_id": project_id,
             "role": "ai",
-            "content": chat_reply
+            "content": cleaned_reply
         }).execute()
-
-    def _clean(val):
-        """Ensure we always store a plain string, never a list/dict."""
-        if isinstance(val, list):
-            return "\n".join(str(v) for v in val)
-        return str(val) if val else ""
 
     record = {
         "project_id": project_id,
-        "skill_report": _clean(result.get("skill_report", "")),
-        "project_evaluation": _clean(result.get("project_evaluation", "")),
-        "project_plan": _clean(result.get("project_plan", "")),
-        "tech_stack": _clean(result.get("tech_stack", "")),
-        "risk_analysis": _clean(result.get("risk_analysis", "")),
-        "mentor_advice": _clean(result.get("mentor_advice", "")),
-        "final_documentation": _clean(result.get("final_documentation", ""))
+        "skill_report": _clean_text(result.get("skill_report", "")),
+        "project_evaluation": _clean_text(result.get("project_evaluation", "")),
+        "project_plan": _clean_text(result.get("project_plan", "")),
+        "tech_stack": _clean_text(result.get("tech_stack", "")),
+        "risk_analysis": _clean_text(result.get("risk_analysis", "")),
+        "mentor_advice": _clean_text(result.get("mentor_advice", "")),
+        "final_documentation": _clean_text(result.get("final_documentation", ""))
     }
 
     existing = supabase.table("agent_output").select("output_id").eq("project_id", project_id).execute()

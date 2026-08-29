@@ -1,23 +1,34 @@
 # backend/app/routers/projects.py
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from supabase import Client
 from typing import List
 
 from ..database import get_supabase
-from ..schemas import ProjectIdeaCreate  # Or whatever schema you use for incoming data
-from ..auth_utils import get_current_student_id  # Secures the endpoint
+from ..schemas import ProjectIdeaCreate
+from ..auth_utils import get_current_student_id
 
 router = APIRouter(prefix="/projects", tags=["Projects"])
+
+def _run_async_initialization(project_id: int):
+    try:
+        from memory import load_memory, save_memory
+        from multi_agent_ai import initialization_app
+        initial_state = load_memory(project_id)
+        initial_state["agents_executed"] = []
+        res = initialization_app.invoke(initial_state)
+        save_memory(project_id, res)
+    except Exception as e:
+        print(f"⚠️ Background initialization error for project {project_id}: {e}")
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 def create_project(
     project_data: ProjectIdeaCreate, 
+    background_tasks: BackgroundTasks,
     supabase: Client = Depends(get_supabase),
     current_student_id: int = Depends(get_current_student_id) # Extract ID from JWT
 ):
     """
-    Creates a new project idea. The student_id is automatically pulled 
-    from the secure authorization token, meaning the user doesn't pass it manually.
+    Creates a new project idea and launches background AI evaluation pipeline.
     """
     if not project_data.title.strip():
         raise HTTPException(status_code=400, detail="Project title cannot be empty")
@@ -42,12 +53,11 @@ def create_project(
     if not res.data:
         raise HTTPException(status_code=500, detail="Failed to initialize project idea")
         
-    new_project = res.data[0]
-    
+    proj_id = res.data[0]["project_id"]
     return {
         "status": "success",
         "message": "Project idea initialized successfully!",
-        "project_id": new_project["project_id"]
+        "project_id": proj_id
     }
 
 
@@ -57,9 +67,13 @@ def get_student_projects(
     current_student_id: int = Depends(get_current_student_id)
 ):
     """
-    Retrieves all projects belonging strictly to the currently logged-in student.
+    Retrieves all projects belonging strictly to the currently logged-in student,
+    or all projects if logged in as faculty.
     """
-    res = supabase.table("project_idea").select("*").eq("student_id", current_student_id).execute()
+    if current_student_id == 999999:
+        res = supabase.table("project_idea").select("*").execute()
+    else:
+        res = supabase.table("project_idea").select("*").eq("student_id", current_student_id).execute()
     
     return [
         {

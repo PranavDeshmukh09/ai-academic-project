@@ -11,7 +11,7 @@ class StudentRegister(BaseModel):
     mentor_name: Optional[str] = None
 
 class StudentLogin(BaseModel):
-    email: EmailStr
+    email: str
     password: str
 
 class TokenResponse(BaseModel):
@@ -22,7 +22,7 @@ class ProjectIdeaCreate(BaseModel):
     title: str
     description: str
     domain: str
-    technologies: list[str]  # e.g., ["Python", "FastAPI"]
+    technologies: Optional[List[str]] = []
 
 class SkillAssessmentCreate(BaseModel):
     skills: List[str]
