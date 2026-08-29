@@ -36,23 +36,6 @@ The master Agile tracking workbook comprising 4 structured worksheets:
 
 ## 🗓️ Sprint Cadence & Milestone Delivery Matrix
 
-```mermaid
-gantt
-    title Agile Sprint Cadence & Milestone Delivery
-    dateFormat  YYYY-MM-DD
-    section Sprint 1
-    S1: Foundation, DB & Onboarding Portal (M1)   :2026-05-27, 2026-06-09
-    section Sprint 2
-    S2: Feasibility, Scope, Stack & Planner (M2)   :2026-06-10, 2026-06-23
-    section Sprint 3
-    S3: Risk Analysis & RAG Mentoring Chat (M3-1)  :2026-06-24, 2026-07-07
-    section Sprint 4
-    S4: Dynamic Plan Recalibration & Docs (M3-2)   :2026-07-08, 2026-07-21
-    section Sprint 5
-    S5: Faculty Monitoring Dashboard (M4-1)        :2026-07-22, 2026-08-04
-    section Sprint 6
-    S6: Multi-Model Fallback, Testing & Defense (M4-2) :2026-08-05, 2026-08-24
-```
 
 | Sprint | Dates | Milestone | Planned Velocity | Delivered Velocity | Burndown Status |
 | :---: | :---: | :---: | :---: | :---: | :---: |

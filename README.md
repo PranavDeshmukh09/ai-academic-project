@@ -46,22 +46,6 @@ The **AI Academic Project Mentor** is an intelligent, agentic platform that guid
 
 ## 🗓️ Project Milestones & Sprints
 
-```mermaid
-gantt
-    title AI Academic Project Mentor - 3 Month Lifecycle
-    dateFormat  YYYY-MM-DD
-    section Milestone 1
-    M1: Study, Architecture, DB & Onboarding Portal   :2026-05-27, 2026-06-09
-    section Milestone 2
-    M2: Feasibility, Scope, Tech Stack & Planner Agents :2026-06-10, 2026-06-23
-    section Milestone 3
-    M3-Part 1: Risk Assessment & RAG Conversational Chat :2026-06-24, 2026-07-07
-    M3-Part 2: Dynamic Plan Recalibration & Doc Gen     :2026-07-08, 2026-07-21
-    section Milestone 4
-    M4-Part 1: Faculty Monitoring Dashboard & Integration:2026-07-22, 2026-08-04
-    M4-Part 2: Optimization, Fallback, Testing & Demo   :2026-08-05, 2026-08-24
-```
-
 ### Milestone Breakdown
 * **Milestone 1 (Weeks 1–2 \| May 27 – Jun 09, 2026 \| ~10 Hours/member):**
   1. Study agentic AI workflows and academic project mentoring methodologies.
