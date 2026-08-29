@@ -2,7 +2,6 @@
 
 [![Project Status: Completed](https://img.shields.io/badge/Status-Completed-success.svg)](file:///d:/ai-academic-project/Agile%20Document/Agile_Template_v0.1.xlsx)
 [![Timeline: May 27 - Aug 24, 2026](https://img.shields.io/badge/Timeline-May%2027%20--%20Aug%2024%2C%202026-blue.svg)](file:///d:/ai-academic-project/Agile%20Document/Agile_Template_v0.1.xlsx)
-[![Team Size: 4 Members](https://img.shields.io/badge/Team-4%20Members-orange.svg)](#-team-members--roles)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688.svg)](https://fastapi.tiangolo.com/)
 [![React + Vite](https://img.shields.io/badge/Frontend-React%20%2B%20Vite-61DAFB.svg)](https://vitejs.dev/)
 [![LangGraph](https://img.shields.io/badge/Orchestration-LangGraph-FF6F00.svg)](https://www.langchain.com/langgraph)
@@ -20,19 +19,6 @@ The **AI Academic Project Mentor** is an intelligent, agentic platform that guid
 2. The platform automatically triggers a **multi-agent AI pipeline** that evaluates feasibility, defines scope, recommends optimal technology stacks, generates a week-wise milestone roadmap with Mermaid Gantt charts, and identifies execution risks — producing a complete project blueprint without additional prompting.
 3. Post-planning, students interact conversationally for **ongoing guidance, progress tracking (dynamic plan adjustment), weekly check-ins, and on-demand academic documentation generation**.
 4. Faculty mentors access a **dedicated monitoring dashboard** for passive, real-time oversight of all student projects, health indicators, and auto-generated weekly summaries.
-
----
-
-## 👥 Team Members & Roles
-
-| Member Name | Role & Core Responsibilities |
-| :--- | :--- |
-| **Pranav Deshmukh** | **Team Lead & Full-Stack / Multi-Agent Architect**<br>LangGraph 7-agent pipeline design, FastAPI gateway routing, auth integration & Groq multi-model fallback resilience. |
-| **Manasa Bethampudi** | **Backend & Database / RAG Systems Engineer**<br>Supabase PostgreSQL normalized schemas, Pinecone vector indexing, PDF context ingestion & database performance optimization. |
-| **Abhishek Bhosale** | **Agentic Workflows & QA / Planning Engineer**<br>Feasibility & Scope agent prompt engineering, skill assessment logic, automated unit testing & test plan design. |
-| **Afreen Shaik** | **Frontend, UI/UX & Faculty Dashboard Engineer**<br>React split-screen UI, Mermaid Gantt chart rendering wrapper, RAG chat workspace & Faculty Monitoring Dashboard. |
-
-**Project Duration:** 3 Months (May 27, 2026 – August 24, 2026 | ~13 Weeks / 6 Agile Sprints)
 
 ---
 
