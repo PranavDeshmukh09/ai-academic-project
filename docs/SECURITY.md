@@ -21,8 +21,7 @@ The **AI Academic Project Mentor** platform implements defense-in-depth security
 
 If you discover a potential security vulnerability within this repository, please report it directly to the engineering team:
 
-* **Primary Contact:** Pranav Deshmukh (Lead Architect)
-* **Email:** security@ai-academic-mentor.edu *(or submit an internal engineering security ticket)*
+* **Primary Contact:** Security Team (`security@ai-academic-mentor.edu`)
 * **Expected Response Window:** Within 48 hours.
 
 ### Reporting Guidelines

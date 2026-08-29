@@ -1,6 +1,6 @@
-# AI Academic Project Mentor - System Architecture & Engineering Specification
+# System Architecture & Engineering Specification
 
-This document provides an exhaustive, production-grade technical specification of the **AI Academic Project Mentor** platform. It details the system topology, multi-agent state machines, Retrieval-Augmented Generation (RAG) pipeline, data persistence schemas, resilience strategies, and latency budgets.
+This document provides an exhaustive technical specification of the **AI Academic Project Mentor** platform. It details the system topology, multi-agent state machines, Retrieval-Augmented Generation (RAG) pipeline, data persistence schemas, resilience strategies, and latency budgets.
 
 ---
 

@@ -22,6 +22,22 @@ The **AI Academic Project Mentor** is an intelligent, agentic platform that guid
 
 ---
 
+## 📚 Central Documentation Hub
+
+All detailed technical specifications, API schemas, and architectural guides are organized in the [`docs/`](docs/) directory:
+
+| Resource | Document | Description |
+| :--- | :--- | :--- |
+| **System Architecture** | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | LangGraph 7-agent state machine, Pinecone RAG topology & circuit breaker. |
+| **API Specification** | [`docs/API_REFERENCE.md`](docs/API_REFERENCE.md) | Complete REST API reference, request/response models & status codes. |
+| **Database & ERD** | [`docs/DATABASE_SCHEMA.md`](docs/DATABASE_SCHEMA.md) | Normalized Supabase schemas, PostgreSQL views & Mermaid ER diagram. |
+| **Frontend Guide** | [`docs/FRONTEND_GUIDE.md`](docs/FRONTEND_GUIDE.md) | React 18, Vite, Tailwind CSS design tokens & component tree. |
+| **Agile & QA Hub** | [`docs/AGILE_MANAGEMENT.md`](docs/AGILE_MANAGEMENT.md) | Sprint burndown velocity metrics, defect resolution & test matrices. |
+| **Engineering Standards**| [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md) | GitFlow branching, Conventional Commits & PR review checklist. |
+| **Security Policies** | [`docs/SECURITY.md`](docs/SECURITY.md) | JWT auth protocols, bcrypt password hashing & data governance. |
+
+---
+
 ## 🎯 Key Project Outcomes
 
 1. **Autonomous Multi-Agent AI Pipeline:** Converts a rough 2-3 line project idea into an actionable, structured project blueprint automatically.

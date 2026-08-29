@@ -1,4 +1,4 @@
-# AI Academic Mentor - Frontend Portal
+# AI Academic Mentor - Frontend Portal Documentation
 
 A modern, responsive, split-screen web application built with **React 18**, **Vite**, and **Tailwind CSS** providing an intuitive user experience for students and faculty mentors.
 

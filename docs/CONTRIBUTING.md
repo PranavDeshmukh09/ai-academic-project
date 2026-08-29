@@ -1,6 +1,6 @@
 # Engineering Contribution Guidelines
 
-Welcome to the **AI Academic Project Mentor** project! This document establishes the engineering standards, Git branching workflows, code quality guidelines, and pull request procedures expected from all contributors, software engineers, and technical leads.
+Welcome to the **AI Academic Project Mentor** project! This document establishes the engineering standards, Git branching workflows, code quality guidelines, and pull request procedures expected from all contributors.
 
 ---
 
@@ -64,13 +64,6 @@ All commit messages must adhere to the [Conventional Commits](https://www.conven
 * `test`: Adding missing tests or correcting existing tests.
 * `chore`: Maintenance tasks, dependency updates, configuration tweaks.
 
-### Examples
-```bash
-git commit -m "feat(agents): implement Groq fallback on Gemini rate limit 429"
-git commit -m "fix(ui): resolve Mermaid Gantt chart unescaped colon rendering exception"
-git commit -m "docs(agile): update Sprint 4 retrospectives and test cases"
-```
-
 ---
 
 ## 4. Code Quality & Formatting Standards
@@ -79,7 +72,7 @@ git commit -m "docs(agile): update Sprint 4 retrospectives and test cases"
 * **PEP 8 Compliance:** Follow standard PEP 8 naming conventions (snake_case for functions/variables, PascalCase for classes).
 * **Type Hints:** Use Python type hinting across all endpoint signatures, service functions, and Pydantic schemas.
 * **Docstrings:** Use Google-style docstrings for all agent functions and utilities.
-* **Formatting Tools:** Run `ruff` or `black` before submitting PRs:
+* **Formatting Tools:** Run `black` or `ruff` before submitting PRs:
   ```bash
   black . --line-length 100
   ```
@@ -101,5 +94,5 @@ Before requesting review on a Pull Request:
 1. [ ] **Branch Up-to-Date:** Rebased on latest `develop` branch.
 2. [ ] **Unit Tests Passed:** All unit tests in `Unit_Test_Plan_v0.1.xlsx` pass without regressions.
 3. [ ] **No Hardcoded Credentials:** Confirmed `.env` secrets are referenced via `os.getenv()`.
-4. [ ] **API Documentation Updated:** Any modified or added endpoint is reflected in `FRONTEND_API_README.md` and Swagger schemas.
+4. [ ] **API Documentation Updated:** Any modified or added endpoint is reflected in `API_REFERENCE.md` and Swagger schemas.
 5. [ ] **Agile Tracking Logged:** Defect or task ID referenced in PR description (e.g. `Resolves T-204, Closes Defect #6`).

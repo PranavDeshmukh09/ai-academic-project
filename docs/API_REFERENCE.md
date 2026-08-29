@@ -1,6 +1,6 @@
-# AI Academic Project Mentor - Frontend Integration & API Reference
+# REST API Reference & Frontend Integration Guide
 
-This guide provides the complete API specification and frontend integration guidelines for the **AI Academic Project Mentor** portal.
+This guide provides the complete API specification and frontend integration guidelines for the **AI Academic Project Mentor** platform.
 
 ---
 

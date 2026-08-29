@@ -4,17 +4,6 @@ This directory contains the complete Agile artifacts, defect tracking records, a
 
 ---
 
-## 👥 Engineering Team & Allocations
-
-| Team Member | Engineering Role | Core Modules & Areas |
-| :--- | :--- | :--- |
-| **Pranav Deshmukh** | Team Lead & Multi-Agent AI Architect | LangGraph 7-Agent Pipeline, FastAPI Gateway, Groq Fallback & Auth |
-| **Manasa Bethampudi** | Backend & Knowledge / RAG Engineer | Supabase PostgreSQL Schemas, Pinecone Vector Indexing & PDF Parsing |
-| **Abhishek Bhosale** | Agentic Workflows & QA / Planning Engineer | Feasibility & Scope Agents, Test Automation, Prompt Engineering & Rubrics |
-| **Afreen Shaik** | Frontend, UI/UX & Faculty Dashboard Engineer | React 18 Split-Screen UI, Mermaid Gantt Wrapper, Mentor Chat & Faculty Dashboard |
-
----
-
 ## 📊 Summary of Agile Artifacts
 
 ### 1. [Agile_Template_v0.1.xlsx](file:///d:/ai-academic-project/Agile%20Document/Agile_Template_v0.1.xlsx)
@@ -35,7 +24,6 @@ The master Agile tracking workbook comprising 4 structured worksheets:
 ---
 
 ## 🗓️ Sprint Cadence & Milestone Delivery Matrix
-
 
 | Sprint | Dates | Milestone | Planned Velocity | Delivered Velocity | Burndown Status |
 | :---: | :---: | :---: | :---: | :---: | :---: |
