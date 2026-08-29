@@ -4,6 +4,9 @@ uvicorn
 python-multipart
 pydantic
 python-dotenv
+python-jose
+bcrypt
+passlib
 
 # Database 
 supabase
@@ -20,5 +23,6 @@ langchain-huggingface
 pypdf
 sentence-transformers
 
+# Utilities & Interfaces
 streamlit
 requests
