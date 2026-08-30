@@ -100,6 +100,8 @@ All detailed technical specifications, API schemas, and architectural guides are
 
 ## 🏗️ System Architecture
 
+![AI-Powered Multi-Agent Student Project Mentoring Platform Architecture](docs/assets/architecture_diagram.jpg)
+
 ```mermaid
 graph TD
     Client[Student / Faculty Browser] -->|React 18 + Vite UI| Gateway[FastAPI Backend Gateway :8000]

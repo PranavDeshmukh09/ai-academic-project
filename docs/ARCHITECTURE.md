@@ -6,7 +6,9 @@ This document provides an exhaustive technical specification of the **AI Academi
 
 ## 1. High-Level Architectural Topology
 
-The system adopts a **Decoupled Three-Tier Architecture** engineered for modularity, horizontal scalability, and multi-model resilience:
+![AI-Powered Multi-Agent Student Project Mentoring Platform Architecture](assets/architecture_diagram.jpg)
+
+The platform implements a multi-layered architecture spanning Presentation, API, Authentication, Agent Orchestration (LangGraph), Multi-Agent LLM execution, Memory, Knowledge (RAG), and PostgreSQL Database layers:
 
 ```mermaid
 graph TB

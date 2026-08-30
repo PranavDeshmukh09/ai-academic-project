@@ -22,12 +22,14 @@ docs/
 
 ## 📑 Detailed Guides
 
-### 1. [System Architecture & Multi-Agent Engine](file:///d:/ai-academic-project/docs/ARCHITECTURE.md)
+### 1. [System Architecture & Multi-Agent Engine](ARCHITECTURE.md)
+![AI-Powered Multi-Agent Student Project Mentoring Platform Architecture](assets/architecture_diagram.jpg)
 * **Decoupled 3-Tier Topology:** Presentation (React 18), API Gateway (FastAPI), AI Engine (LangGraph).
 * **LangGraph 7-Agent Pipeline:** Sequential execution state schema, prompt strategies, and agent roles.
 * **Pinecone RAG Vector Pipeline:** 384-dimensional dense embeddings (`all-MiniLM-L6-v2`) and cosine similarity search.
 * **Resilience Circuit Breaker:** Automatic fallback to **Groq LLaMA 3 70B** on Google Gemini rate limits (HTTP 429).
 * **Performance Benchmarks:** P95 latency budgets across authentication, RAG queries, and pipeline initializations.
+
 
 ---
 
