@@ -1,6 +1,7 @@
 # Security & Data Governance Policy
 
-The **AI Academic Project Mentor** platform implements defense-in-depth security standards to protect student academic intellectual property, user authentication credentials, and database integrity.
+The **AI-Guided Academic Project Progress Tracking Platform with Planning & Mentorship Assistance** platform implements defense-in-depth security standards to protect student academic intellectual property, user authentication credentials, and database integrity.
+
 
 ---
 

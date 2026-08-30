@@ -1,4 +1,5 @@
-# Multi-stage Dockerfile for AI Academic Project Mentor Backend
+# Multi-stage Dockerfile for AI-Guided Academic Project Progress Tracking Platform Backend
+
 FROM python:3.11-slim AS base
 
 ENV PYTHONUNBUFFERED=1 \

@@ -1,6 +1,7 @@
-# 📚 AI Academic Project Mentor - Central Documentation Hub
+# 📚 AI-Guided Academic Project Progress Tracking Platform with Planning & Mentorship Assistance - Central Documentation Hub
 
-Welcome to the unified documentation center for the **AI Academic Project Mentor** platform. All technical specifications, architecture blueprints, API references, database models, and agile management artifacts are indexed below for single-point access.
+Welcome to the unified documentation center for the **AI-Guided Academic Project Progress Tracking Platform with Planning & Mentorship Assistance**. All technical specifications, architecture blueprints, API references, database models, and agile management artifacts are indexed below for single-point access.
+
 
 ---
 

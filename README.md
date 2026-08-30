@@ -1,4 +1,4 @@
-# AI Academic Project Mentor
+# AI-Guided Academic Project Progress Tracking Platform with Planning & Mentorship Assistance
 
 [![Project Status: Completed](https://img.shields.io/badge/Status-Completed-success.svg)](file:///d:/ai-academic-project/Agile%20Document/Agile_Template_v0.1.xlsx)
 [![Timeline: May 27 - Aug 24, 2026](https://img.shields.io/badge/Timeline-May%2027%20--%20Aug%2024%2C%202026-blue.svg)](file:///d:/ai-academic-project/Agile%20Document/Agile_Template_v0.1.xlsx)
@@ -14,7 +14,7 @@
 
 Students frequently face significant challenges while selecting, planning, executing, and documenting academic projects. Many projects fail not because of technical difficulty, but due to **poor planning, unclear objectives, unrealistic timelines, improper technology selection, and insufficient mentorship**. Faculty members often supervise multiple teams simultaneously, limiting personalized guidance available to each student group.
 
-The **AI Academic Project Mentor** is an intelligent, agentic platform that guides students through the complete academic project lifecycle:
+The **AI-Guided Academic Project Progress Tracking Platform with Planning & Mentorship Assistance** is an intelligent, agentic platform that guides students through the complete academic project lifecycle:
 1. A student submits a rough project idea in **2–3 lines**.
 2. The platform automatically triggers a **multi-agent AI pipeline** that evaluates feasibility, defines scope, recommends optimal technology stacks, generates a week-wise milestone roadmap with Mermaid Gantt charts, and identifies execution risks — producing a complete project blueprint without additional prompting.
 3. Post-planning, students interact conversationally for **ongoing guidance, progress tracking (dynamic plan adjustment), weekly check-ins, and on-demand academic documentation generation**.

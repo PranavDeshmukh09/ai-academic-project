@@ -1,6 +1,7 @@
 # Agile Project Management & Quality Assurance Hub
 
-This directory contains the complete Agile artifacts, defect tracking records, and unit test plans for the **AI Academic Project Mentor** system, developed over a **3-Month Lifecycle (May 27, 2026 – August 24, 2026)** across **6 Agile Sprints** by a 4-member cross-functional engineering team.
+This directory contains the complete Agile artifacts, defect tracking records, and unit test plans for the **AI-Guided Academic Project Progress Tracking Platform with Planning & Mentorship Assistance**, developed over a **3-Month Lifecycle (May 27, 2026 – August 24, 2026)** across **6 Agile Sprints** by a 4-member cross-functional engineering team.
+
 
 ---
 

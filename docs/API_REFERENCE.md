@@ -1,6 +1,7 @@
 # REST API Reference & Frontend Integration Guide
 
-This guide provides the complete API specification and frontend integration guidelines for the **AI Academic Project Mentor** platform.
+This guide provides the complete API specification and frontend integration guidelines for the **AI-Guided Academic Project Progress Tracking Platform with Planning & Mentorship Assistance**.
+
 
 ---
 
@@ -74,7 +75,7 @@ Interactive Swagger API documentation: `http://localhost:8000/docs`
     "year": 4,
     "skills": ["Python", "React", "FastAPI", "Machine Learning"],
     "experience_level": "Intermediate",
-    "project_title": "AI Academic Project Mentor",
+    "project_title": "AI-Guided Academic Project Progress Tracking Platform",
     "project_description": "An agentic platform that evaluates feasibility, generates week-wise milestones, and guides students through project lifecycle.",
     "project_domain": "Agentic AI / EdTech"
   }
@@ -95,7 +96,7 @@ Interactive Swagger API documentation: `http://localhost:8000/docs`
   {
     "student_profile": { "student_id": 1, "name": "Pranav Deshmukh", "department": "CSE", "year": 4 },
     "skill_assessment": { "skills": ["Python", "React"], "experience_level": "Intermediate" },
-    "project_idea": { "project_id": 1, "title": "AI Academic Project Mentor", "status": "Initialized" }
+    "project_idea": { "project_id": 1, "title": "AI-Guided Academic Project Progress Tracking Platform", "status": "Initialized" }
   }
   ```
 
@@ -210,7 +211,7 @@ Interactive Swagger API documentation: `http://localhost:8000/docs`
   ```json
   {
     "doc_type": "Synopsis",
-    "generated_document": "# Academic Project Synopsis\n\n## 1. Project Title\nAI Academic Project Mentor\n\n## 2. Problem Statement\n..."
+    "generated_document": "# Academic Project Synopsis\n\n## 1. Project Title\nAI-Guided Academic Project Progress Tracking Platform with Planning & Mentorship Assistance\n\n## 2. Problem Statement\n..."
   }
   ```
 
@@ -231,7 +232,7 @@ Interactive Swagger API documentation: `http://localhost:8000/docs`
         "name": "Pranav Deshmukh",
         "department": "Computer Science & Engineering",
         "project_id": 1,
-        "project_title": "AI Academic Project Mentor",
+        "project_title": "AI-Guided Academic Project Progress Tracking Platform",
         "status": "On Track",
         "health_indicator": "Green",
         "completion_percentage": 92,

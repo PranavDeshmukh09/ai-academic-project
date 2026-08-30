@@ -89,7 +89,7 @@ export default function LoginPortal({ onAuthSuccess }) {
           <div className="bg-white/20 p-2.5 rounded-xl backdrop-blur-md border border-white/20">
             <span className="text-2xl">🎓</span>
           </div>
-          <span className="text-xl font-bold tracking-wide">AI Academic Project Mentor</span>
+          <span className="text-lg font-bold tracking-wide">AI-Guided Project Platform</span>
         </div>
 
         {/* Core Value Statement Accent */}
@@ -100,7 +100,7 @@ export default function LoginPortal({ onAuthSuccess }) {
             with AI Guidance.
           </h1>
           <p className="text-white/80 text-base leading-relaxed font-light">
-            Plan, build, and succeed in your academic journey with the power of coordinated multi-agent artificial intelligence.
+            Plan, track, and succeed in your academic journey with coordinated multi-agent intelligence and automated progress assistance.
           </p>
           
           {/* Laptop and Books Graphic Frame Emulation */}
@@ -126,7 +126,7 @@ export default function LoginPortal({ onAuthSuccess }) {
 
         {/* Branding Footer */}
         <div className="text-white/50 text-xs z-10">
-          © {new Date().getFullYear()} AI Academic Project Mentor. Step-by-step guidance system.
+          © {new Date().getFullYear()} AI-Guided Academic Project Progress Tracking Platform.
         </div>
       </div>
 

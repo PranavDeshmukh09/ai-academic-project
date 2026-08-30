@@ -1,6 +1,7 @@
 # Backend & Database Architecture Documentation
 
-This document outlines the database schema, relational models, and service architecture for the **AI Academic Project Mentor** backend.
+This document outlines the database schema, relational models, and service architecture for the **AI-Guided Academic Project Progress Tracking Platform with Planning & Mentorship Assistance** backend.
+
 
 ---
 

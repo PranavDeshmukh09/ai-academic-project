@@ -541,7 +541,7 @@ export default function AuthGateway({ onAuthSuccess, setUserProfile, onBackToHom
       
       {/* Footer copyright */}
       <footer className="py-8 text-center text-[10px] text-slate-400 font-bold">
-        © 2026 AI Academic Project Mentor. All rights reserved.
+        © 2026 AI-Guided Academic Project Progress Tracking Platform. All rights reserved.
       </footer>
 
     </div>

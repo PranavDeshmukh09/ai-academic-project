@@ -1,6 +1,7 @@
 # Engineering Contribution Guidelines
 
-Welcome to the **AI Academic Project Mentor** project! This document establishes the engineering standards, Git branching workflows, code quality guidelines, and pull request procedures expected from all contributors.
+Welcome to the **AI-Guided Academic Project Progress Tracking Platform with Planning & Mentorship Assistance** project! This document establishes the engineering standards, Git branching workflows, code quality guidelines, and pull request procedures expected from all contributors.
+
 
 ---
 

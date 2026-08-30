@@ -1,6 +1,7 @@
-# AI Academic Mentor - Frontend Portal Documentation
+# AI-Guided Academic Project Progress Tracking Platform - Frontend Documentation
 
 A modern, responsive, split-screen web application built with **React 18**, **Vite**, and **Tailwind CSS** providing an intuitive user experience for students and faculty mentors.
+
 
 ---
 
